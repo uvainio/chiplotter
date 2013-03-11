@@ -61,7 +61,7 @@ def automatedcakes(parameterfilename,localdir1):
     # Write the parameters into variables which are easier to identify
     # and more importantly, transform them to the format required by Fit2d
     cake_azimuth_start   = float(parameters[1])
-    cake_azimuth_end     = float(parameters[3])
+    cake_azimuth_end     = float(parameters[3])    
     cake_inner_radius    = float(parameters[5])
     cake_outer_radius    = float(parameters[7])
     cake_radial_bins     = int(np.min([cake_outer_radius-cake_inner_radius,float(parameters[9])]))
@@ -144,9 +144,11 @@ def automatedcakes(parameterfilename,localdir1):
         if dirpath[len(dirpath)-len(subdirname):] != subdirname:
             for file1 in filenames:
                 prefix,postfix = os.path.splitext(file1)
-                subdirprefix1 = re.findall("[\S\d]*(?=_|-)",prefix)
-                if len(subdirprefix1)>0:
-                    subdirprefix = subdirprefix1[0]
+                temp1 = re.findall("[\S\d]*(?=_\d{5}_\d{5})",prefix)
+                tempb = re.findall("[\S\d]*(?=_\d{5})",prefix)
+                temp1.extend(tempb)
+                if len(temp1)>0:
+                    subdirprefix = min(filter(None, temp1), key=len)
                 else:
                     subdirprefix = ''
                 subpath = dirpath+"/"+subdirprefix+'/'+subdirname+"/"
@@ -188,6 +190,15 @@ def automatedcakes(parameterfilename,localdir1):
                     print >>f, "DC FILE"
                     print >>f, dcfile
                     print >>f, "O.K."
+                    # If PerkinElmer, then TRANSPOSE the image
+                    if detector == 'perkinelmer':
+                        print >>f, "EXIT"                        
+                        print >>f, "IMAGE PROCESSING (GENERAL)"
+                        print >>f, "GEOMETRIC"
+                        print >>f, "TRANSPOSE"
+                        print >>f, "EXIT"
+                        print >>f, "EXIT"                        
+                        print >>f, "POWDER DIFFRACTION (2-D)"                        
                     print >>f, "CAKE"
                     if counterfiles == 1:
                         print >>f, "NO CHANGE"
@@ -245,10 +256,16 @@ def automatedcakes(parameterfilename,localdir1):
                         print "SCAN TYPE NOT IDENTIFIED! USE TTH, Q or RADIAL."
                     print >>f, "1 DEGREE AZ"
                     print >>f, "YES"
-                    print >>f, "AZIMUTH BINS"
-                    print >>f, cake_azimuthal_bins
-                    print >>f, "RADIAL BINS"
-                    print >>f, cake_radial_bins
+                    if scantype == "RADIAL":
+                        print >>f, "AZIMUTH BINS"
+                        print >>f, int(cake_azimuth_end-cake_azimuth_start)
+                        print >>f, "RADIAL BINS"
+                        print >>f, "1"
+                    else:
+                        print >>f, "AZIMUTH BINS"
+                        print >>f, cake_azimuthal_bins
+                        print >>f, "RADIAL BINS"
+                        print >>f, cake_radial_bins
                     print >>f, "POLARISATION"
                     print >>f, "NO"
                     print >>f, "CONSERVE INT."
@@ -260,7 +277,7 @@ def automatedcakes(parameterfilename,localdir1):
                     print >>f, "O.K."
                     print >>f, "EXIT"
                     print >>f, "OUTPUT"
-                    if cake_azimuthal_bins>1:
+                    if cake_azimuthal_bins>1 and cake_radial_bins >1:
                         print >>f, "2-D ASCII"
                         print >>f, "NO"
                         print >>f, subpath+prefix+".asc"
@@ -273,10 +290,18 @@ def automatedcakes(parameterfilename,localdir1):
                         print >>f, "CHIPLOT"
                         print >>f, "FILE NAME"
                         print >>f, subpath+prefix+".chi"
-                        print >>f, "OUTPUT ROWS"
-                        print >>f, "YES"
-                        print >>f, "ROW NUMBER"
-                        print >>f, "1"
+                        if scantype == "RADIAL":
+                            print >>f, "OUTPUT ROWS"
+                            print >>f, "NO"
+                        else:
+                            print >>f, "OUTPUT ROWS"
+                            print >>f, "YES"
+                        if scantype == "RADIAL":
+                            print >>f, "ROW NUMBER"
+                            print >>f, int(cake_azimuth_end-cake_azimuth_start)                     
+                        else:
+                            print >>f, "ROW NUMBER"
+                            print >>f, "1"
                         print >>f, "COLUMN NUMBER"
                         print >>f, "1"
                         print >>f, "O.K."
@@ -296,9 +321,9 @@ def automatedcakes(parameterfilename,localdir1):
         print "Succesfully created fit2d.mac"
         print ""
         os.chdir(fit2dpath)
-        print "Executing: %s" % str(fit2dversion+' -dim'+str(pixels1)+'x'+str(pixels2)+' -macfit2d.mac')
+        print "Executing: %s" % str(fit2dversion+' -dim'+str(pixels2)+'x'+str(pixels2)+' -macfit2d.mac')
         # Execute the created Fit2d macro with Fit2d
-        p = subprocess.Popen(str(fit2dversion+' -dim'+str(pixels1)+'x'+str(pixels2)+' -macfit2d.mac'))
+        p = subprocess.Popen(str(fit2dversion+' -dim'+str(pixels2)+'x'+str(pixels2)+' -macfit2d.mac'))
         p.wait()
     else:
         print "Did not execute Fit2d because the filenames are too long or"
@@ -315,3 +340,4 @@ def automatedcakes(parameterfilename,localdir1):
     # Pause just to give the chance for the user to look at the output before closing the shell.
     if pausing == True:
         os.system("pause")
+        

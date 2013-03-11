@@ -44,7 +44,7 @@ class GuiQwtPlot( QtGui.QMainWindow ):
         self.button2 = QtGui.QPushButton( "Plot selected files" )
         self.button3 = QtGui.QPushButton( "Select all" )
         self.button4 = QtGui.QPushButton( "Select none" )
-        self.button5 = QtGui.QPushButton( "Download and integrate" )
+        self.button5 = QtGui.QPushButton( "Integrate" )
         self.button6 = QtGui.QPushButton( "Integral over ROI (defined by the two vertical cursors)" )
     
         left_hbox0 = QtGui.QVBoxLayout()
@@ -144,10 +144,10 @@ class GuiQwtPlot( QtGui.QMainWindow ):
         counterlist = 0
         for name in reversed(names):
             item = QtGui.QStandardItem(name)
-            if counterlist == 0: # Check only the first one
-                item.setCheckState(Qt.Checked)
-            else:
-                item.setCheckState(Qt.Unchecked)
+#            if counterlist == 0: # Check only the first one
+#                item.setCheckState(Qt.Checked)
+#            else:
+            item.setCheckState(Qt.Unchecked)
             item.setCheckable(True)
             self.series_list_model.appendRow(item)
             counterlist = counterlist + 1
@@ -252,7 +252,10 @@ class GuiQwtPlot( QtGui.QMainWindow ):
                 f = open(str(self.fullfilename[name]))
                 text1 = f.read()
                 f.close()
-                if 'Q' in text1:
+                if 'Azimuth (Degrees)' in text1:
+                    foundtth = 1
+                    CurvePlot.set_axis_title(self.plot,CurvePlot.X_BOTTOM,"Azimuth angle (degrees)")
+                elif 'Q' in text1:
                     foundq = 1
                     CurvePlot.set_axis_title(self.plot,CurvePlot.X_BOTTOM,"q (1/nm)")
                 elif '2-Theta Angle (Degrees)' in text1:
@@ -353,13 +356,6 @@ class GuiQwtPlot( QtGui.QMainWindow ):
                     minsumx = min(self.sumx[name])
                 if min(self.sumy[name])<minsumy and min(self.sumy[name]) > 0:
                     minsumy = min(self.sumy[name])
-                #if len(colorlistred) > colorcounter:
-                #    self.curveB = make.curve( [ ], [ ], '', (0,0,0), linewidth=3.0, marker='Rect', markersize=10, markerfacecolor = QtGui.QColor( colorlistred[colorcounter], colorlistgreen[colorcounter], colorlistblue[colorcounter] ))
-                #    colorcounter = colorcounter + 1
-                #else:
-                #    self.curveB = make.curve( [ ], [ ], '', (0,0,0), linewidth=3.0, marker='Rect', markersize=10, markerfacecolor = QtGui.QColor( random.randint(0,255), random.randint(0,255), random.randint(0,255)) )
-                #self.plot2.add_item( self.curveB )
-                #self.curveB.set_data( self.sumx[name],self.sumy[name] )
                 # Check which series names we have
                 name1 = re.findall("[\W\S\d]*(?=-[\d]{5}.chi)",name)
                 # Try different versions of writing the names if first one does not succeed
