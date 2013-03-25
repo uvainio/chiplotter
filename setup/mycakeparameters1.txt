@@ -1,0 +1,44 @@
+# CAKE First azimuth angle (in degrees), normally 0.0
+0.0
+# CAKE Last azimuth angle (in degrees), normally 360
+360
+# CAKE Inner radius, IR (in pixels)
+100
+# CAKE Outer radius, OR (in pixels)
+1600
+# CAKE Bins in radial direction (maximum is OR-IR, checked by the script)
+1500
+# CAKE Azimuthal bins (put 1 if you want to integrate the full range into one image to get *.chi file)
+1
+# Mask file in Fit2d format (write complete directory path, e.g. C:/mydata/fit2d.msk), if none, type NO
+NO
+# Dark current file (give complete path, e.g. write complete directory path, e.g. /home/p07user/mydata/dc_00001.mar345), if none, type NO
+NO
+# Beam center X
+1669.777
+# Beam center Y
+1846.498
+# Wavelength (in Angstrom)
+0.2309
+# Sample-to-detector distance (mm)
+800.146
+# Detector pixel size in x direction (micrometers)
+100.0
+# Detector pixel size in y direction (micrometers)
+100.0
+# Detector tilt rotation (in degrees)
+-56.30
+# Detector tilt angle (in degrees)
+0.3922
+# Detector (options: mar345, perkinelmer)
+mar345
+# Path where Fit2D is found (e.g. C:/Users/uvainio/Desktop/fit2d)
+D:/data/temp/setup
+# X axis scale in degrees or 1/nm (TTH or Q)
+TTH
+# Overwrite already integrated data (YES or NO), during data collecting you only want to integrate the newest one, then select NO
+NO
+# Pause (ON or OFF), Note that in case of errors, it is better to have pause ON so you have time to read the error!
+OFF
+# Run number, this number or text(!) will be at the end of the subdirectory name to separate different runs
+1
