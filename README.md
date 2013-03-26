@@ -27,7 +27,7 @@ Select fit2d_12_077_i686_WXP.exe. If you already use Fit2D and you have it on yo
 there is no need to download it again.
 
 - In pipeline.py change the correct path to "localdir1" (where your data is) and "fit2ddir"
-(where your fit2d_12_077_i686_WXP.exe is).
+(where your fit2d_12_077_i686_WXP.exe is). Please use slash (/) instead of backslash (\) in the directory names!
 
 - Double click on chiplotter.py and make sure the directory is the main directory
 where you have your "setup" folder. Click "Integrate". The example file LaB6_0003.mar3450
