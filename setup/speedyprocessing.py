@@ -14,7 +14,7 @@ import re
 import errno
 
 
-def automatedcakes(parameterfilename,localdir1):
+def automatedcakes(parameterfilename,localdir1,fit2dpath):
     """
     Created on Tue Nov 27 09:28:38 2012
 
@@ -109,7 +109,7 @@ def automatedcakes(parameterfilename,localdir1):
         errorsfound = 1
         print "Unknown detector %s!" % detector
         print "Cannot proceed with processing."
-    fit2dpath           = parameters[35][:len(parameters[35])-1]
+#    fit2dpath           = parameters[35][:len(parameters[35])-1]
     scantype            = parameters[37][:len(parameters[37])-1]
     if parameters[39][:2]=='NO':
         overwriting     = 0 # Integrate only files for which integrated files do not existAlways integrate everything
@@ -331,7 +331,7 @@ def automatedcakes(parameterfilename,localdir1):
     if pausing == True:
         os.system("pause")
         
-def automatedcakeserror(parameterfilename,localdir1):
+def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
     """
     Created on Tue Nov 27 09:28:38 2012
 
@@ -430,7 +430,7 @@ def automatedcakeserror(parameterfilename,localdir1):
         errorsfound = 1
         print "Unknown detector %s!" % detector
         print "Cannot proceed with processing."
-    fit2dpath           = parameters[35][:len(parameters[35])-1]
+#    fit2dpath           = parameters[35][:len(parameters[35])-1]
     scantype            = parameters[37][:len(parameters[37])-1]
     if parameters[39][:2]=='NO':
         overwriting     = 0 # Integrate only files for which integrated files do not existAlways integrate everything

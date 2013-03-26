@@ -32,8 +32,8 @@ NO
 0.3922
 # Detector (options: mar345, perkinelmer)
 mar345
-# Path where Fit2D is found (e.g. C:/Users/uvainio/Desktop/fit2d)
-D:/data/temp/setup
+# Reserve, leave the next line empty, do not delete the empty line
+
 # X axis scale in degrees or 1/nm (TTH or Q)
 TTH
 # Overwrite already integrated data (YES or NO), during data collecting you only want to integrate the newest one, then select NO

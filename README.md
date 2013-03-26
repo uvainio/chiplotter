@@ -7,6 +7,9 @@ different sections.
 To install this package, first download Python x,y 2.7 from
 http://code.google.com/p/pythonxy/wiki/Downloads
 
+Download also Fit2D to some folder from http://ftp.esrf.eu/pub/expg/FIT2D/
+Select fit2d_12_077_i686_WXP.exe
+
 After that, download these macros as a zip file (the little button ZIP up there)
 and copy them to an empty folder with a nice name. E.g. D:/XRDmacros
 
@@ -16,11 +19,10 @@ click on "chiplotter.py".
 If you wish to integrate data, then follow the instructions below:
 -------------------
 
-- Make sure you have also version fit2d_12_077_i686_WXP.exe of Fit2D somewhere.
+- In pipeline.py change the correct path to "localdir1" (where your data is) and "fit2ddir"
+(where your fit2d_12_077_i686_WXP.exe is).
 
-- In pipeline.py change the correct path to "localdir1" and "fit2ddir".
-
-Double click on chiplotter.py and make sure the directory is the main directory
+- Double click on chiplotter.py and make sure the directory is the main directory
 where you have your "setup" folder. Click "Integrate". The example file LaB6_0003.mar3450
 should now be integrated by Fit2D and a new subdirectory with name "integ_1"
 should appear with the corresponding LaB6_0003.chi file in it.
