@@ -16,24 +16,29 @@ the *.txt files into this setup folder.
 Author: Ulla Vainio (ulla.vainio@hzg.de)
 """
 
-##################### ------------------
+########### DON't CHANGE THE NEXT LINES ##########
 
+import os
+import sys
 
 # Local directory in which or in the subdirectories of which
-# all the data that needs to be integrated is found
-localdir1 = 'D:/XRDmacros/chiplotter'
-# Directory where Fit2D (fit2d_12_077_i686_WXP.exe) is
-fit2ddir = 'D:/Fit2d'
+# all the data that needs to be integrated is found.
+# Here we take the directory where we are currently in,
+# which is what you write in the 'Directory' field in chiplotter.py
+localdir1 = os.getcwd()
 # Directory where the Python macros are found, must be a subdirectory
 # of 'localdir1', do not change this
 setupdir = localdir1+"/setup"
 
-###################### -----------------
-
 # Append python files to the path and import necessary libraries
-import sys
 sys.path.append(setupdir)
 import speedyprocessing as sp
+
+
+#################### CHANGE BELOW #####################
+
+# Directory where your Fit2D (fit2d_12_077_i686_WXP.exe) is
+fit2ddir = 'D:/Fit2d'
 
 # Which txt file contains the integration parameters
 cakefile1 = "mycakeparameters1.txt"

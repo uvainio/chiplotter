@@ -34,7 +34,7 @@ class GuiQwtPlot( QtGui.QMainWindow ):
 
     def __create_layout( self ):
         
-        self.setWindowTitle( "Live *.Chi plotter, v. 2.0.0 (Jan 2013)" )
+        self.setWindowTitle( "Live *.Chi plotter, v. 2.1.0 (April 2013)" )
 
         self.plot = CurvePlot( self )
         self.plot.set_antialiasing( True )

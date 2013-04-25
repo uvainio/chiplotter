@@ -39,10 +39,10 @@ def automatedcakes(parameterfilename,localdir1,fit2dpath):
     fit2dversion = "fit2d_12_077_i686_WXP.exe"
     print ""
     # First look for the parameter file in the directories
-    # Note, we take the first file we find!
+    # Note, we take the one in setup directory
     counter = 0
     parameterfilefound = 0
-    for dirpath, dirnames, filenames in os.walk(os.getcwd()):
+    for dirpath, dirnames, filenames in os.walk(localdir1+'/setup'):
         for file1 in filenames:
             if file1 == parameterfilename and counter == 0:
                 paramfile = "%s/%s" % (dirpath,file1)
@@ -54,7 +54,8 @@ def automatedcakes(parameterfilename,localdir1,fit2dpath):
                 parameterfilefound = 1
     print ""
     if parameterfilefound == 0:
-        print "Parameter file %s was NOT FOUND anywhere in the directory! Program will exit." % parameterfilename
+        print "Parameter file %s was NOT FOUND in the setup subfolder!"
+        print "Please change the directory in pipeline.py" % parameterfilename
         os.system("pause")
         exit(0)
     

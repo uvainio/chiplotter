@@ -11,7 +11,7 @@ different sectors.
 To install this package
 -------------------
 
-- Download Python x,y 2.7 from http://code.google.com/p/pythonxy/wiki/Downloads
+- Download and install newest Python(x,y) 2.7.X.X from http://code.google.com/p/pythonxy/wiki/Downloads
 
 - Download these macros as a zip file (the little button ZIP up there)
 and copy them to an empty folder with a nice name. E.g. D:/XRDmacros
@@ -26,7 +26,7 @@ To integrate data, follow the instructions below:
 Select fit2d_12_077_i686_WXP.exe. If you already use Fit2D and you have it on your computer,
 there is no need to download it again.
 
-- In pipeline.py change the correct path to "localdir1" (where your data is) and "fit2ddir"
+- In pipeline.py change the correct path "fit2ddir"
 (where your fit2d_12_077_i686_WXP.exe is). Please use slash (/) instead of backslash (\\) in the directory names!
 
 - Double click on chiplotter.py and make sure the directory is the main directory
@@ -35,10 +35,9 @@ should now be integrated by Fit2D and a new subdirectory with name "integ_1"
 should appear with the corresponding LaB6_0003.chi file in it.
 
 - If everything works fine so far, you may copy the setup directory to where you have your
-real files which you want to intergate and change the parameters in the mycakeparameters1.txt,
+real files which you want to integrate and change the parameters in the mycakeparameters1.txt,
 create more such parameter files and correspondingly change the pipeline.py to integrate
-with more parameter files. Don`t forget to change also the "localdir1" directory to the main
-directory where your files should be found (either in the main directory or in subdirectories).
+with more parameter files.
 
 Remember, when plotting, you can put the "Directory" in the GUI to any directory,
 but for integrating it must always be the directory in which there is a "setup" subfolder.
