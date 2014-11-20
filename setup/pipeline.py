@@ -42,15 +42,12 @@ fit2ddir = 'D:/Fit2d'
 
 # Which txt file contains the integration parameters
 cakefile1 = "mycakeparameters1.txt"
-#cakefile2 = "mycakeparameters2.txt"
-#cakefile3 = "mycakeparameters3.txt"
-#cakefile4 = "mycakeparameters4.txt"
 
 # Integrate data using the parameters defined in the cakefile
 sp.automatedcakes(cakefile1,localdir1,fit2ddir)
-#sp.automatedcakes(cakefile2,localdir1,fit2ddir)
-#sp.automatedcakes(cakefile3,localdir1,fit2ddir)
-#sp.automatedcakes(cakefile4,localdir1,fit2ddir)
+
+# Calculate error if detector follows Poisson statistics
+#sp.automatedcakeserror(cakefile1,localdir1,fit2ddir)
 
 ###### -----
 sys.path.remove(setupdir)

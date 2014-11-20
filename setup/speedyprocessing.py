@@ -106,6 +106,10 @@ def automatedcakes(parameterfilename,localdir1,fit2dpath):
         pixels1 = 487
         pixels2 = 619
         file_extension = ".tif"
+    elif detector == 'vantec':
+        pixels1 = 2048
+        pixels2 = 2048
+        file_extension = ".gfrm"
     else:
         errorsfound = 1
         print "Unknown detector %s!" % detector
@@ -186,6 +190,8 @@ def automatedcakes(parameterfilename,localdir1,fit2dpath):
                     # For some reason Pilatus 300k seems to require an extra OK
                     if detector == 'pilatus300k' or detector == 'perkinelmer':
                         print >>f, "O.K."
+                    if detector == 'vantec':
+                        print >>f, "Bruker"
                     # Define common parameters
                     print >>f, "DARK CURRENT"
                     print >>f, dcyesno
@@ -276,7 +282,7 @@ def automatedcakes(parameterfilename,localdir1,fit2dpath):
                         print >>f, subpath+prefix+".asc"
                         if len(subpath+prefix+".asc") > 79:
                             print "WARNING! Path is too long for saving *.asc files"
-                            print subpath+prefix+".asc exceeds limit (80 caharacters). Length %d." % len(subpath+prefix+".asc")
+                            print subpath+prefix+".asc exceeds limit (80 characters). Length %d." % len(subpath+prefix+".asc")
                             errors = errors + 1
                         print >>f, "YES"
                     else:
@@ -336,7 +342,7 @@ def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
     """
     Created on Tue Nov 27 09:28:38 2012
 
-    Script creating automated cake integrationsof ERRORS from all files in the directory and
+    Script creating automated cake integrations of ERRORS from all files in the directory and
     in all subdirectories, as defined by files myfit2dparams.txt and mycakeparams.txt
 
     Use "Run number" to separate runs with different angle ranges
@@ -427,6 +433,10 @@ def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
         pixels1 = 487
         pixels2 = 619
         file_extension = ".tif"
+    elif detector == 'vantec':
+        pixels1 = 2048
+        pixels2 = 2048
+        file_extension = ".gfrm"
     else:
         errorsfound = 1
         print "Unknown detector %s!" % detector
@@ -506,6 +516,8 @@ def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
                     # For some reason Pilatus 300k requires an extra OK
                     if detector == 'pilatus300k' or detector == 'perkinelmer':
                         print >>f, "O.K."
+                    if detector == 'vantec':
+                        print >>f, "Bruker"
                     # Define common parameters
                     print >>f, "DARK CURRENT"
                     print >>f, dcyesno
@@ -514,11 +526,11 @@ def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
                     print >>f, "O.K."
             # The only difference to the automatedcakes() is the SQUARE ROOT
                     print >>f, "EXIT"
-            # A BUG PREVENTS FROM USING THE GRAPHICAL INTERFACE FOR THIS
-                    print >>f, "KEYBOARD INTERFACE"
-                    print >>f, "RAISE TO A POWER"
-                    print >>f, "0.5"
-                    print >>f, "EXIT"
+#            # A BUG PREVENTS FROM USING THE GRAPHICAL INTERFACE FOR THIS
+#                    print >>f, "KEYBOARD INTERFACE"
+#                    print >>f, "RAISE TO A POWER"
+#                    print >>f, "0.5"
+#                    print >>f, "EXIT"
             # Back to integrating
                     print >>f, "POWDER DIFFRACTION (2-D)"
                     print >>f, "CAKE"
@@ -591,7 +603,9 @@ def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
                     print >>f, "POLARISATION"
                     print >>f, "NO"
                     print >>f, "CONSERVE INT."
-                    print >>f, "NO"
+#                    print >>f, "NO"
+# 13.5.2014 Correct error calculation
+                    print >>f, "YES"
                     print >>f, "GEOMETRY COR."
                     print >>f, "YES"
                     print >>f, "MAX. D-SPACING"
@@ -602,16 +616,18 @@ def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
                     if cake_azimuthal_bins>1 and cake_radial_bins > 1:
                         print >>f, "2-D ASCII"
                         print >>f, "NO"
-                        print >>f, subpath+prefix+".asc"
+#                        print >>f, subpath+prefix+".asc"
+                        print >>f, subpath+prefix+"_errtemp.asc"
                         if len(subpath+prefix+"_err.asc") > 79:
                             print "WARNING! Path is too long for saving *.asc files"
-                            print subpath+prefix+".asc exceeds limit (80 caharacters)."
+                            print subpath+prefix+".asc exceeds limit (80 characters)."
                             errors = errors + 1
                         print >>f, "NO"
                     else:
                         print >>f, "CHIPLOT"
                         print >>f, "FILE NAME"
-                        print >>f, subpath+prefix+"_err.chi"
+#                        print >>f, subpath+prefix+"_err.chi"
+                        print >>f, subpath+prefix+"_errtemp.chi"
                         if cake_radial_bins == 1:
                             print >>f, "OUTPUT ROWS"
                             print >>f, "NO"
@@ -645,6 +661,32 @@ def automatedcakeserror(parameterfilename,localdir1,fit2dpath):
         # Execute the created Fit2d macro with Fit2d
         p = subprocess.Popen(str(fit2dversion+' -dim'+str(pixels2)+'x'+str(pixels2)+' -macfit2d.mac'))
         p.wait()
+# Added 20.11.2014 Correct error calculation from temporarily saved files
+        counterfiles = 0
+        os.chdir(localdir1)
+        for dirpath, dirnames, filenames in os.walk(os.getcwd()):
+                for file1 in filenames:
+                    prefix,postfix = os.path.splitext(file1)
+                    # As a default overwrite
+                    overwritingthisone = 1
+                    # If temp files exist, then calculate real error
+                    if 'errtemp' in str(file1):
+                        print "Calculate correct error:\n"
+                        print dirpath+'/'+file1
+                        datan = np.genfromtxt(dirpath+'/'+file1,skip_header=4)
+                        data = np.genfromtxt(dirpath+'/'+prefix[:-8]+".chi",skip_header=4)
+                        # We calculate the error
+                        # such that error = intensity/sqrt(intensity*N)
+                        indices = np.where(datan[:,1]>0)[0]
+                        datafinal = np.zeros((len(data),3))
+                        datafinal[:,0] = data[:,0]
+                        datafinal[indices,1] = data[indices,1]
+                        datafinal[indices,2] = data[indices,1]/np.sqrt(datan[indices,1])
+                        np.savetxt(dirpath+'/'+prefix[:-8]+".dat",datafinal,fmt='%.6e',delimiter='\t',newline='\n')
+                # Remove the errtemp files
+                for file1 in filenames:
+                    if 'errtemp' in str(file1):
+                        os.remove(dirpath+'/'+file1)
     else:
         print "Did not execute Fit2d because the filenames are too long or"
         print "there were no files that needed to be integrated."
