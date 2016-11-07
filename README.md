@@ -46,4 +46,4 @@ that are in the "setup" folder.
 
 
 -------------------
-This program comes without any warranty! Please report all bugs to ulla.vainio@hzg.de
+This program comes without any warranty! Please report all bugs to ulla.vainio@aalto.fi
